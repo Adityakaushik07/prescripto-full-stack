@@ -1,0 +1,1 @@
+export const MyAppointmentsPage = () => <div>MyAppointmentsPage</div>;

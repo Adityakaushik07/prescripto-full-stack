@@ -1,0 +1,1 @@
+export const DoctorProfilePage = () => <div>DoctorProfilePage</div>;
