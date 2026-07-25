@@ -22,6 +22,7 @@ import {
 } from '@mui/icons-material';
 import { useState, type MouseEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuthStore } from '../../store/authStore';
 import { useUiStore } from '../../store/uiStore';
 
@@ -54,6 +55,7 @@ const matchPathStart = (pathname: string, prefix: string): boolean =>
 export const Navbar = () => {
   const { user, logout } = useAuthStore();
   const { themeMode, toggleTheme, setSidebarOpen } = useUiStore();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
@@ -74,6 +76,8 @@ export const Navbar = () => {
   const handleLogout = () => {
     closeMenu();
     logout();
+    // Wipe cached server data so the next logged-in user never sees it
+    queryClient.clear();
     navigate('/login');
   };
 

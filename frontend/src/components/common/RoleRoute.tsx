@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuthStore } from '../../store/authStore';
+import { getDashboardPath, useAuthStore } from '../../store/authStore';
 import type { UserRole } from '../../types/auth.types';
 
 type RoleRouteProps = {
@@ -8,14 +8,17 @@ type RoleRouteProps = {
 
 /**
  * Route guard: only lets users whose role is in `allowedRoles` through.
- * Otherwise redirects to /home (a safe default for any logged-in user).
+ * Wrong role → bounced to their own role-appropriate dashboard (PRD US-1.4).
  * Used as a layout route wrapping role-specific routes (admin/doctor).
  */
 export const RoleRoute = ({ allowedRoles }: RoleRouteProps) => {
   const user = useAuthStore((state) => state.user);
 
-  if (!user || !allowedRoles.includes(user.role)) {
-    return <Navigate to="/home" replace />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  if (!allowedRoles.includes(user.role)) {
+    return <Navigate to={getDashboardPath(user.role)} replace />;
   }
   return <Outlet />;
 };

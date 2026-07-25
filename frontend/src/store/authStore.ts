@@ -1,5 +1,12 @@
 import { create } from 'zustand';
-import type { AuthUser } from '../types/auth.types';
+import type { AuthUser, UserRole } from '../types/auth.types';
+
+// Each role lands on its own home screen after login (per PRD US-1.2)
+export const getDashboardPath = (role: UserRole): string => {
+  if (role === 'admin') return '/dashboard/admin';
+  if (role === 'doctor') return '/dashboard/doctor';
+  return '/home';
+};
 
 type AuthState = {
   token: string | null;
